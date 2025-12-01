@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-java-app
+  labels:
+    app: cicd-java-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cicd-java-app
+  template:
+    metadata:
+      labels:
+        app: cicd-java-app
+    spec:
+      containers:
+      - name: cicd-java-app
+        image: mahithadevops/cicd-java-app:latest
+        ports:
+        - containerPort: 8080
