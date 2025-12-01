@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: cicd-java-app
-        image: mahithadevops/cicd-java-app:latest
+        image: mahithadevops/cicd-java-app:5
         ports:
         - containerPort: 8080
