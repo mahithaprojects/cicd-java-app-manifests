@@ -5,30 +5,21 @@ metadata:
   namespace: default
   labels:
     app: cicd-java-app
-  annotations:
-    # 1. Image Updater: Alias (cicd-java-app) points to your Docker Hub image.
-    argocd-image-updater.argoproj.io/image-list: cicd-java-app=docker.io/mahithadevops/cicd-java-app
-    
-    # 2. Update Strategy: Use 'newest-build' to find the highest BUILD_NUMBER tag.
-    argocd-image-updater.argoproj.io/cicd-java-app.update-strategy: newest-build
-    
-    # 3. Write-back: Image Updater will update this manifest automatically in Git.
-    argocd-image-updater.argoproj.io/write-back-method: git
+
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: cicd-java-app
+
   template:
     metadata:
       labels:
         app: cicd-java-app
     spec:
       containers:
-      - name: cicd
-        # Use the placeholder {*alias*} which the Image Updater will replace 
-        # with the latest tag (e.g., :10, :11, etc.)
-        image: mahithadevops/cicd-java-app:{*cicd-java-app*} 
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
+        - name: cicd-java-app
+          image: mahithadevops/cicd-java-app:5   # <-- Jenkins will update this tag
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
