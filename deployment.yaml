@@ -6,15 +6,14 @@ metadata:
   labels:
     app: cicd-java-app
   annotations:
-    # Image Updater: points to your Docker Hub image
-    argocd-image-updater.argoproj.io/image-list: cicd=mahithadevops/cicd-java-app
-
-    # Update strategy → always pull the latest version
-    argocd-image-updater.argoproj.io/cicd.update-strategy: latest
-
-    # Write-back to Git (Image Updater will update this manifest automatically)
+    # 1. Image Updater: Alias (cicd-java-app) points to your Docker Hub image.
+    argocd-image-updater.argoproj.io/image-list: cicd-java-app=docker.io/mahithadevops/cicd-java-app
+    
+    # 2. Update Strategy: Use 'newest-build' to find the highest BUILD_NUMBER tag.
+    argocd-image-updater.argoproj.io/cicd-java-app.update-strategy: newest-build
+    
+    # 3. Write-back: Image Updater will update this manifest automatically in Git.
     argocd-image-updater.argoproj.io/write-back-method: git
-
 spec:
   replicas: 1
   selector:
@@ -26,8 +25,10 @@ spec:
         app: cicd-java-app
     spec:
       containers:
-        - name: cicd
-          image: mahithadevops/cicd-java-app:1   # image updater will modify this automatically
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
+      - name: cicd
+        # Use the placeholder {*alias*} which the Image Updater will replace 
+        # with the latest tag (e.g., :10, :11, etc.)
+        image: mahithadevops/cicd-java-app:{*cicd-java-app*} 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
