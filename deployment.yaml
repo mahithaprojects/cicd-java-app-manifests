@@ -2,8 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cicd-java-app
+  namespace: default
   labels:
     app: cicd-java-app
+  annotations:
+    # Image Updater: points to your Docker Hub image
+    argocd-image-updater.argoproj.io/image-list: cicd=mahithadevops/cicd-java-app
+
+    # Update strategy → always pull the latest version
+    argocd-image-updater.argoproj.io/cicd.update-strategy: latest
+
+    # Write-back to Git (Image Updater will update this manifest automatically)
+    argocd-image-updater.argoproj.io/write-back-method: git
+
 spec:
   replicas: 1
   selector:
@@ -15,7 +26,8 @@ spec:
         app: cicd-java-app
     spec:
       containers:
-      - name: cicd-java-app
-        image: mahithadevops/cicd-java-app:5
-        ports:
-        - containerPort: 8080
+        - name: cicd
+          image: mahithadevops/cicd-java-app:1   # image updater will modify this automatically
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
