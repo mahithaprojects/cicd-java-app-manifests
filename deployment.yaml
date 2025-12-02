@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: cicd-java-app
-          image: mahithadevops/cicd-java-app:5   # <-- Jenkins will update this tag
+          image: mahithadevops/cicd-java-app:8
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
